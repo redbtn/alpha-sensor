@@ -1,0 +1,60 @@
+root@orangepizerolts:~/alpha-sensor/templates# cat index.html-orig 
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Solar Dryer v4.0</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h1>Real-time Data Sensor</h1>
+    <canvas id="chart" width="400" height="200"></canvas>
+
+    <script>
+        // JavaScript code to fetch JSON data and create a chart
+
+        // Function to fetch data from the server
+        function fetchData() {
+            fetch('/data')
+                .then(response => response.json())
+                .then(data => {
+                    // Process data and update the chart
+                    updateChart(data);
+                });
+        }
+
+        // Function to update the chart
+        function updateChart(data) {
+            var ctx = document.getElementById('chart').getContext('2d');
+
+            var chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.timestamp,
+                    datasets: [{
+                        label: 'Humidity',
+                        data: data.humidity,
+                        borderColor: 'blue',
+                        fill: false
+                    },
+                    {
+                        label: 'Temperature',
+                        data: data.temperature,
+                        borderColor: 'red',
+                        fill: false
+                    },
+                    {
+                        label: 'Heat Index',
+                        data: data.index,
+                        borderColor: 'orange',
+                        fill: false
+                    }]
+                },
+                options: {}
+            });
+        }
+
+        // Fetch data every 5 seconds
+        setInterval(fetchData, 5000);
+    </script>
+</body>
+</html>
