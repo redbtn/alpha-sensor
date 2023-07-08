@@ -1,0 +1,144 @@
+root@orangepizerolts:~/alpha-sensor/templates# cat index.html-weatherapi 
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Solar Dryer v4.0</title>
+    <link href="https://fonts.googleapis.com/css2?family=Martian+Mono&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Martian Mono', monospace;
+        }
+    </style>
+</head>
+<body>
+    <h2>Real-time Data Sensor</h2>
+
+    <div id="weather-box" style="position: fixed; top: 10px; right: 10px; padding: 10px; background-color: #f0f0f0; border: 1px solid #ccc;">
+        <p id="weather-location" style="display: inline;"></p>
+        <p id="weather-temperature" style="display: inline;"></p>
+        <p id="weather-precipitation" style="display: inline;"></p>
+    </div>
+
+    <canvas id="chart" width="400" height="200"></canvas>
+
+    <script>
+        // JavaScript code to fetch JSON data and create a chart
+
+        // Function to fetch data from the server
+        function fetchData() {
+            fetch('/data')
+                .then(response => response.json())
+                .then(data => {
+                    // Process data and update the chart
+                    var filteredData = filterDataByInterval(data, 5); // Filter data by 5-minute interval
+                    updateChart(filteredData);
+                    // Reload the page after updating the chart
+                    setTimeout(() => {
+                        location.reload();
+                    }, 50000);
+                });
+        }
+
+        // Function to filter data by the given interval
+        function filterDataByInterval(data, interval) {
+            var filteredData = {
+                timestamp: [],
+                humidity: [],
+                temperature: [],
+                index: []
+            };
+
+            var currentMinute = null;
+            for (var i = 0; i < data.timestamp.length; i++) {
+                var date = new Date(data.timestamp[i]);
+                var minutes = date.getMinutes();
+                
+                if (currentMinute === null || minutes % interval === 0) {
+                    currentMinute = minutes;
+                    filteredData.timestamp.push(data.timestamp[i]);
+                    filteredData.humidity.push(data.humidity[i]);
+                    filteredData.temperature.push(data.temperature[i]);
+                    filteredData.index.push(data.index[i]);
+                }
+            }
+
+            return filteredData;
+        }
+
+        // Function to format timestamp to HH:MM
+        function formatTimestamp(timestamp) {
+            var date = new Date(timestamp);
+            var hours = date.getHours();
+            var minutes = date.getMinutes();
+            var formattedTime = hours.toString().padStart(2, '0') + ':' + minutes.toString().padStart(2, '0');
+            return formattedTime;
+        }
+
+        // Function to update the chart
+        function updateChart(data) {
+            var ctx = document.getElementById('chart').getContext('2d');
+
+            var uniqueLabels = Array.from(new Set(data.timestamp.map(formatTimestamp))); // Get unique labels
+
+            var chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: uniqueLabels,
+                    datasets: [{
+                        label: 'Humidity',
+                        data: data.humidity,
+                        borderColor: 'blue',
+                        fill: false
+                    },
+                    {
+                        label: 'Temperature',
+                        data: data.temperature,
+                        borderColor: 'red',
+                        fill: false
+                    },
+                    {
+                        label: 'Heat Index',
+                        data: data.index,
+                        borderColor: 'orange',
+                        fill: false
+                    }]
+                },
+                options: {}
+            });
+        }
+
+        // Function to update the weather box
+        function updateWeatherBox(weatherData) {
+            var locationElement = document.getElementById('weather-location');
+            var temperatureElement = document.getElementById('weather-temperature');
+            var precipitationElement = document.getElementById('weather-precipitation');
+
+            locationElement.textContent = weatherData.name;
+            var temperature = (weatherData.main.temp - 273.15).toFixed(2); // Convert temperature from Kelvin to Celsius
+            temperatureElement.textContent = '| ' + temperature + '°C';
+            precipitationElement.textContent = '| ' + weatherData.weather[0].description;
+        }
+
+
+        // Function to fetch weather data from OpenWeatherMap API
+        function fetchWeatherData() {
+            const API_KEY = 'fbe9e731cec75703760e2fcc1b3e964a';
+            const LOCATION = 'Ubud';
+
+            fetch(`https://api.openweathermap.org/data/2.5/weather?q=${LOCATION}&appid=${API_KEY}`)
+                .then(response => response.json())
+                .then(data => {
+                    updateWeatherBox(data);
+                })
+                .catch(error => console.log(error));
+        }
+
+        // Fetch data initially
+        fetchData();
+
+        // Fetch weather data initially
+        fetchWeatherData();
+    </script>
+</body>
+</html>
