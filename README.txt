@@ -12,10 +12,10 @@ Pip3
 Flask
 
 #Start & serve flask in the background and when server start:
-sudo mv start_flask.sh /etc/init.d/
-sudo chmod +x /etc/init.d/start_flask.sh
-sudo update-rc.d start_flask.sh defaults
+# mv start_flask.sh /etc/init.d/
+# chmod +x /etc/init.d/start_flask.sh
+# update-rc.d start_flask.sh defaults
 
-#To start immediately or check the service status:
-sudo service start_flask.sh start
-sudo service start_flask.sh status
+#To start immediately without reboot or check the service status:
+# service start_flask.sh start
+# service start_flask.sh status
