@@ -1,3 +1,8 @@
+#Objective
+This project try to combine Arduino Uno and Orange Pi Zero.
+Arduino Uno read DHT22 sensor, control fan and send data to oled and serial port.
+Orange Pi Zero will read serial data and save data into data.json and serve python flask as web service to provide simple realtime dashboard graphical data.
+
 #Requirements:
 Arduino Uno
 Orange Pi Zero LTS
