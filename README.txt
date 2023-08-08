@@ -23,14 +23,15 @@ git clone this repo
 # update-rc.d start_flask.sh defaults
 
 Troubleshoot:
-Start all service (read_arduino & flask)
-# service start_flask.sh status
-# service start_flask.sh start
+#Start all service (read_arduino & flask)
+service start_flask.sh status
+service start_flask.sh start
 
 #Read data from Arduino:
 cd /alpha-sensor
-python3 read_arduino.py
+nohup python3 read_arduino.py &
 chmod a+rw /dev/ttyACM0 /*if permission not given */
+
 #If flask port already used:
 fuser -k 5000/TCP
 export FLASK_ENV=development
