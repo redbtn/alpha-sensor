@@ -43,5 +43,8 @@ export FLASK_ENV=development
 export FLASK_APP=dash.py
 flask run --host=0.0.0.0
 
+#If permission denied issues happen (in pc conn to opi through serial usb):
+chown username /dev/ttyUSB0
+
 Check in browser: http://192.168.1.227:5000
 Orange Pi default user: root/orangepi
