@@ -1,7 +1,7 @@
 #Objective
 This project try to combine Arduino Uno and Orange Pi Zero.
 Arduino Uno read DHT22 sensor, control fan and send data to oled and serial port.
-Orange Pi Zero will read serial data and save data into data.json and serve python flask as web service to provide simple realtime dashboard graphical data.
+Orange Pi Zero will read data from serial port and save data into data.json and serve python flask as web service to provide simple realtime dashboard graphical data.
 
 #Requirements:
 Arduino Uno
@@ -28,6 +28,8 @@ git clone this repo
 # update-rc.d start_flask.sh defaults
 
 Troubleshoot:
+#Make sure service are running
+service --status-all
 #Start all service (read_arduino & flask)
 service start_flask.sh status
 service start_flask.sh start
