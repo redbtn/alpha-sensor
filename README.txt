@@ -12,8 +12,9 @@ Relay 5V
 
 #Software required:
 Ubuntu Bionic 18.04
-Python3
+Python 3.6.9
 Pip3
+Python-dev
 Flask
 
 Arduino Uno:
