@@ -14,7 +14,7 @@ Relay 5V
 Ubuntu Bionic 18.04
 Python 3.6.9
 Pip3
-Python-dev
+Python3-dev
 Flask
 
 Arduino Uno:
