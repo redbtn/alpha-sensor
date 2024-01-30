@@ -26,37 +26,45 @@ else:
     index_values = []
 
 # Read data from Arduino Uno
+# Inside the while loop
 while True:
     data = ser.readline().decode('utf-8').strip()
     if data:
         print("Received data:", data)
         h, t, i = data.split(", ")
 
-        # Extract values from the received data
-        h_val = float(h.split(":")[1])
-        t_val = float(t.split(":")[1])
-        i_val = float(i.split(":")[1].rstrip(','))
+        # Initialize variables to store converted values
+        h_val, t_val, i_val = None, None, None
+
+        # Extract values from the received data with error handling
+        try:
+            h_val = float(h.split(":")[1])
+            t_val = float(t.split(":")[1])
+            i_val = float(i.split(":")[1].rstrip(','))
+        except ValueError as e:
+            print(f"Error: {e}")
 
         # Get the current timestamp
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-        # Append the values to the respective lists
-        timestamps.append(timestamp)
-        h_values.append(h_val)
-        t_values.append(t_val)
-        index_values.append(i_val)
+        # Append the values to the respective lists only if all conversions were successful
+        if all(val is not None for val in [h_val, t_val, i_val]):
+            timestamps.append(timestamp)
+            h_values.append(h_val)
+            t_values.append(t_val)
+            index_values.append(i_val)
 
-        # Create the data dictionary
-        data_dict = {
-            "timestamp": timestamps,
-            "humidity": h_values,
-            "temperature": t_values,
-            "index": index_values
-        }
+            # Create the data dictionary
+            data_dict = {
+                "timestamp": timestamps,
+                "humidity": h_values,
+                "temperature": t_values,
+                "index": index_values
+            }
 
-        # Write data to data.json file
-        with open('data.json', 'w') as file:
-            json.dump(data_dict, file, indent=4)
+            # Write data to data.json file
+            with open('data.json', 'w') as file:
+                json.dump(data_dict, file, indent=4)
 
     time.sleep(1)
 
