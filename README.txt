@@ -15,7 +15,9 @@ Ubuntu Bionic 18.04
 Python 3.6.9
 Pip3
 Python3-dev
+Python Libraries (see at code)
 Flask
+ntp
 
 Arduino Uno:
 compile & install file sketch_dht_oled.ino
