@@ -39,6 +39,8 @@ service start_flask.sh start
 
 #Read data from Arduino:
 cd /alpha-sensor
+python3 read_arduino.py
+
 nohup python3 read_arduino.py &
 chmod a+rw /dev/ttyACM0 /*if permission not given */
 
