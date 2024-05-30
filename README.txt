@@ -30,6 +30,9 @@ git clone this repo
 # chmod +x /etc/init.d/start_flask.sh
 # update-rc.d start_flask.sh defaults
 
+#crontab -l:
+0 6 * * * mv /root/alpha-sensor/data.json /root/alpha-sensor/data/data$(date +\%Y\%m\%d\%H\%M\%S).json && touch /root/alpha-sensor/data.json && nohup python3 /root/alpha-sensor/read_arduino.py & >> /root/alpha-sensor/crontab.log 2>&1 && service start_flask.sh restart
+
 Troubleshoot:
 #Make sure service are running
 service --status-all
